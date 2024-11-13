@@ -4,6 +4,14 @@ import os
 import magic
 from pathlib import Path
 
+def determine_environments_of_segments(csv_file):
+
+    environments = {}
+
+    print("Placeholder text")
+
+    return environments
+
 def main():
 
     directory_of_main_py = os.path.dirname(os.path.abspath(__file__))
@@ -11,26 +19,30 @@ def main():
 
     file_opened = False
     while file_opened == False:
-        filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
-        
-        # TODO: add a check to see if the file exists
-        if filename.endswith('.csv'):
-            print("Success\n")
-            continue
 
-        elif filename.endswith('.csv') == False:
-            print("The file provided is not a .csv file. Please try again.\n")
-            continue
+        valid_filename_provided = False
+        while valid_filename_provided == False:
+            filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
+            
+            if filename.endswith('.csv'):
+#                print("Success\n")
+                valid_filename_provided = True
+                break
 
+            elif filename.endswith('.csv') == False:
+                print("The file provided is not a .csv file. Please try again.\n")
+                continue
+
+        try:
+            with open(filename, 'r') as f:
+                dictionary_of_environments = determine_environments_of_segments(f)
+
+        except IOError:
+            print('Error: There was an error opening the file %s' % filename)
+            continue
 
         file_opened = True
 
-    #   check if filename exists
-    #       check if file is .csv using the magic library
-    #           if file is .csv, open .csv file
-    #           file_opened = 1
-    #   else:
-    #       print "sorry, there is no file with that filename. Please try again"
 
 
     # characters_and_environments = {}
