@@ -1,51 +1,29 @@
 # The following contains both code (in progress), as well as pseudocode that will be rewritten using real code
 
+import csvkit
 import os
 import magic
 from pathlib import Path
 
-def determine_environments_of_segments(csv_file):
+def open_csv(csv_filename):
+    try:
+        with open(csv_filename, 'r') as f:
+            csv_contents = f.readlines()
+            return csv_contents
+    except IOError:
+        print('Error: There was an error opening the file %s\n' % csv_filename)
+        return False
+
+def determine_environments_of_segments(csv_file_object):
+
+    # TODO: Function WIP
+    ''' This will generate a dictionary with this structure (this example is based on an input consisting of the string "aa"):
+    ["a": [{"pre-segment segment": "#", "post-segment segment": "#"}, {"pre-segment segment": "a", "post-segment segment": "#"}]}'''
 
     environments = {}
 
-    print("Placeholder text")
-
-    return environments
-
-def main():
-
-    directory_of_main_py = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(directory_of_main_py)
-
-    file_opened = False
-    while file_opened == False:
-
-        valid_filename_provided = False
-        while valid_filename_provided == False:
-            filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
-            
-            if filename.endswith('.csv'):
-#                print("Success\n")
-                valid_filename_provided = True
-                break
-
-            elif filename.endswith('.csv') == False:
-                print("The file provided is not a .csv file. Please try again.\n")
-                continue
-
-        try:
-            with open(filename, 'r') as f:
-                dictionary_of_environments = determine_environments_of_segments(f)
-
-        except IOError:
-            print('Error: There was an error opening the file %s' % filename)
-            continue
-
-        file_opened = True
 
 
-
-    # characters_and_environments = {}
     # Extract column names from .csv file (i.e., the text in the first row for each column) and put each column name into a dictionary
     # Print "The file [example.csv] has the following columns:
     # A title
@@ -76,6 +54,44 @@ def main():
     #               characters_and_environments[character].append(environment)
     #           else:
     #               continue
+
+    return environments
+
+def main():
+
+    directory_of_main_py = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(directory_of_main_py)
+
+    file_opened = False
+    while file_opened == False:
+
+        valid_filename_provided = False
+        while valid_filename_provided == False:
+            filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
+            
+            if filename.endswith('.csv'):
+#                print("Success\n")
+                valid_filename_provided = True
+                break
+
+            elif filename.endswith('.csv') == False:
+                print("Error: The file provided is not a .csv file. Please try again.\n")
+                continue
+
+        csv_contents = open_csv(filename)
+
+        opening_the_csv_raised_an_exception = (csv_contents == False)
+        if opening_the_csv_raised_an_exception:
+            continue
+
+        file_opened = True
+
+        dictionary_of_environments = determine_environments_of_segments(csv_contents)
+
+
+
+
+
 
     # # TODO:
 
