@@ -1,17 +1,16 @@
 # The following contains both code (in progress), as well as pseudocode that will be rewritten using real code
 
-import csvkit
+import csv
 import os
 import magic
 from pathlib import Path
 
-def open_csv(csv_filename):
-    try:
-        with open(csv_filename, 'r') as f:
-            csv_contents = f.readlines()
-            return csv_contents
-    except IOError:
-        print('Error: There was an error opening the file %s\n' % csv_filename)
+def check_if_csv_filename_is_valid(filename):
+
+    if filename.endswith('.csv'):
+        return True
+
+    elif filename.endswith('.csv') == False:
         return False
 
 def determine_environments_of_segments(csv_file_object):
@@ -57,31 +56,48 @@ def determine_environments_of_segments(csv_file_object):
 
     return environments
 
+def get_lines_from_csv(csv_filename):
+
+    try:
+        with open(csv_filename, 'r') as f:
+            csv_contents = f.readlines()
+
+            try:
+                sample = f.read(64)
+                has_header = csv.Sniffer().has_header(sample)
+                if has_header == False:
+                    return False
+            except:
+                print('Error: This .csv file is not formatted correctly. Please try again.\n')
+                return False
+
+            return csv_contents
+
+    except IOError:
+        print('Error: There was an error opening the file %s\n' % filename)
+        return False
+
 def main():
 
     directory_of_main_py = os.path.dirname(os.path.abspath(__file__))
     os.chdir(directory_of_main_py)
 
+    # move the checks into a separate check_if_file_is_valid_csv
     file_opened = False
     while file_opened == False:
 
-        valid_filename_provided = False
-        while valid_filename_provided == False:
-            filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
-            
-            if filename.endswith('.csv'):
-#                print("Success\n")
-                valid_filename_provided = True
-                break
+        filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
+        
+        if check_if_csv_filename_is_valid(filename) == False:
+            print("Error: The file provided is does not end in '.csv.' Please try again.\n")
+            continue
+        
+        #TODO: use csv.sniffer to determine if file is .csv
 
-            elif filename.endswith('.csv') == False:
-                print("Error: The file provided is not a .csv file. Please try again.\n")
-                continue
+        csv_contents = get_lines_from_csv(filename)
 
-        csv_contents = open_csv(filename)
-
-        opening_the_csv_raised_an_exception = (csv_contents == False)
-        if opening_the_csv_raised_an_exception:
+        opening_the_csv_failed = (csv_contents == False)
+        if opening_the_csv_failed:
             continue
 
         file_opened = True
