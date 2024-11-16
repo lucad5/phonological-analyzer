@@ -62,13 +62,14 @@ def get_lines_from_csv(csv_filename):
         with open(csv_filename, 'r') as f:
             csv_contents = f.readlines()
 
+            # Test if the first row of the .csv file is valid (if it is a header)
             try:
-                sample = f.read(64)
+                sample = csv_contents[0]
                 has_header = csv.Sniffer().has_header(sample)
                 if has_header == False:
                     return False
-            except:
-                print('Error: This .csv file is not formatted correctly. Please try again.\n')
+            except csv.Error:
+                print('Error: This .csv file is not formatted correctly (it has no header in the first row). Please try again.\n')
                 return False
 
             return csv_contents
@@ -82,7 +83,6 @@ def main():
     directory_of_main_py = os.path.dirname(os.path.abspath(__file__))
     os.chdir(directory_of_main_py)
 
-    # move the checks into a separate check_if_file_is_valid_csv
     file_opened = False
     while file_opened == False:
 
@@ -92,8 +92,6 @@ def main():
             print("Error: The file provided is does not end in '.csv.' Please try again.\n")
             continue
         
-        #TODO: use csv.sniffer to determine if file is .csv
-
         csv_contents = get_lines_from_csv(filename)
 
         opening_the_csv_failed = (csv_contents == False)
