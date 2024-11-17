@@ -1,8 +1,9 @@
 # The following contains both code (in progress), as well as pseudocode that will be rewritten using real code
 
-import csv
 import os
 import magic
+import pandas as pd
+import csv
 from pathlib import Path
 
 def check_if_csv_filename_is_valid(filename):
@@ -13,14 +14,21 @@ def check_if_csv_filename_is_valid(filename):
     elif filename.endswith('.csv') == False:
         return False
 
-def determine_environments_of_segments(csv_file_object):
+def determine_environments_of_segments(columns_from_csv):
 
     # TODO: Function WIP
+    # TODO: Ask what the separator for the csv will be
     ''' This will generate a dictionary with this structure (this example is based on an input consisting of the string "aa"):
     ["a": [{"pre-segment segment": "#", "post-segment segment": "#"}, {"pre-segment segment": "a", "post-segment segment": "#"}]}'''
 
     environments = {}
 
+    headers = columns_from_csv[0].rstrip("\n").split(",")
+
+    print(headers)
+#    for row in columns_from_csv:
+#        headers.append(row.split(","))
+#        print(headers)
 
 
     # Extract column names from .csv file (i.e., the text in the first row for each column) and put each column name into a dictionary
@@ -56,27 +64,35 @@ def determine_environments_of_segments(csv_file_object):
 
     return environments
 
-def get_lines_from_csv(csv_filename):
+
+
+def check_if_csv_has_header(csv_filename):
 
     try:
         with open(csv_filename, 'r') as f:
+
             csv_contents = f.readlines()
 
             # Test if the first row of the .csv file is valid (if it is a header)
             try:
                 sample = csv_contents[0]
                 has_header = csv.Sniffer().has_header(sample)
+                print(has_header)
                 if has_header == False:
                     return False
+                else:
+                    return True
             except csv.Error:
-                print('Error: This .csv file is not formatted correctly (it has no header in the first row). Please try again.\n')
+                incorrect_formatting_error_message = "\nError: The first row of this .csv file is not formatted correctly." \
+                    " It might be missing delimiters (like commas, spaces) between the cells." \
+                    " Try again after resolving any issues with the first row of the file.\n"
+                print(incorrect_formatting_error_message)
                 return False
-
-            return csv_contents
-
     except IOError:
         print('Error: There was an error opening the file %s\n' % filename)
         return False
+ 
+    return False   
 
 def main():
 
@@ -92,19 +108,15 @@ def main():
             print("Error: The file provided is does not end in '.csv.' Please try again.\n")
             continue
         
-        csv_contents = get_lines_from_csv(filename)
-
-        opening_the_csv_failed = (csv_contents == False)
-        if opening_the_csv_failed:
+        csv_has_header = check_if_csv_has_header(filename)
+        if csv_has_header == False:
             continue
+
+        df_environments = pd.read_csv(filename)
 
         file_opened = True
 
-        dictionary_of_environments = determine_environments_of_segments(csv_contents)
-
-
-
-
+#        dictionary_of_environments = determine_environments_of_segments(df_environments)
 
 
     # # TODO:
