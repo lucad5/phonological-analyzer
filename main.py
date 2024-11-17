@@ -14,29 +14,25 @@ def check_if_csv_filename_is_valid(filename):
     elif filename.endswith('.csv') == False:
         return False
 
-def determine_environments_of_segments(columns_from_csv):
+def determine_environments_of_segments(df_from_csv):
 
     # TODO: Function WIP
-    # TODO: Ask what the separator for the csv will be
     ''' This will generate a dictionary with this structure (this example is based on an input consisting of the string "aa"):
     ["a": [{"pre-segment segment": "#", "post-segment segment": "#"}, {"pre-segment segment": "a", "post-segment segment": "#"}]}'''
 
     environments = {}
 
-    headers = columns_from_csv[0].rstrip("\n").split(",")
+    csv_headers = list(df_from_csv)
 
-    print(headers)
-#    for row in columns_from_csv:
-#        headers.append(row.split(","))
-#        print(headers)
+    header_input_message = "The file has the following columns:\n"
 
+    for header, header_index in enumerate(csv_headers):
+        column_header_number = "(%s)" % header_index
 
-    # Extract column names from .csv file (i.e., the text in the first row for each column) and put each column name into a dictionary
-    # Print "The file [example.csv] has the following columns:
-    # A title
-    # B title2
-    # C title3
-    # Please type in the letter of the column that contains the IPA text"
+        header_input_message += "%s %s\n" % (column_header_number, header)
+
+    header_input_message += "Please type in the letter(s) (shown in parentheses) of the column containing the data in IPA transcription: "
+
 
     # for cell in column: 
 
@@ -116,7 +112,7 @@ def main():
 
         file_opened = True
 
-#        dictionary_of_environments = determine_environments_of_segments(df_environments)
+        dictionary_of_environments = determine_environments_of_segments(df_environments)
 
 
     # # TODO:
