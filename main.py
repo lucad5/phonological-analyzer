@@ -33,6 +33,7 @@ def determine_environments_of_segments(df_from_csv):
 
     header_input_message += "Please type in the letter(s) (shown in parentheses) of the column containing the data in IPA transcription: "
 
+    letter_of_column_with_data = input(header_input_message)
 
     # for cell in column: 
 
