@@ -35,23 +35,30 @@ def determine_environments_of_segments(df_from_csv):
 
     letter_of_column_with_data = input(header_input_message)
 
-    # for cell in column: 
+#    print(df_from_csv[letter_of_column_with_data].values[0])
 
-    # #  TODO: this should use an index, not a for loop
-    #   for character in cell
+    for content_of_cell in df_from_csv[letter_of_column_with_data].values:
 
-    #       if character_index == 0 or character[index-1] == " ":
-    #           character_before_character = "#"
-    #       else:
-    #           character_before_character = cell[character_index+1]
+        for char_index, char in enumerate(content_of_cell):
+   
+            char_is_at_start_of_word = (char_index == 0 or content_of_cell[char_index-1] == " ")
+            if char_is_at_start_of_word:
+                character_before_character = "#"
+            else:
+                character_before_character = content_of_cell[char_index-1]
 
-    #       if character_index == cell.length():
-    #           character_after_character = "#"
-    #       else:
-    #           character_after_character = cell[character_index+1]
-        
+            word_is_one_character = (len(content_of_cell) == 1)
+            char_is_at_end_of_word = (char_index == len(content_of_cell)-1 or content_of_cell[char_index+1] == " ")
 
-    #       environment = character_before_character + "_" + character_after_character
+            if word_is_one_character or char_is_at_end_of_word:
+                character_after_character = "#"
+            else:
+                character_after_character = content_of_cell[char_index+1]
+            
+            environment_of_char = character_before_character + "_" + character_after_character
+
+            # TODO: add code to check if enviornment is already in the environments dictionary, and if not, add environment_of_char to it
+#            print(environment_of_char)
 
     #       if character in environments_of_characters:
     #           if environment not in environments_of_characters[character]:    
