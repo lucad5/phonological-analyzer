@@ -24,56 +24,61 @@ def determine_environments_of_segments(df_from_csv):
 
     csv_headers = list(df_from_csv)
 
-    header_input_message = "The file has the following columns:\n"
+    header_input_message = "\nThe file has the following columns (the column name/header is in parentheses):\n"
 
-    for header, header_index in enumerate(csv_headers):
-        column_header_number = "(%s)" % header_index
+    for header_number, header_index in enumerate(csv_headers):
+        column_header = "(%s)" % header_index
 
-        header_input_message += "%s %s\n" % (column_header_number, header)
+        header_input_message += "%s %s\n" % (column_header, header_number)
 
-    header_input_message += "Please type in the letter(s) (shown in parentheses) of the column containing the data in IPA transcription: "
+    header_input_message += "\nPlease type in the name/header of the column that contains the IPA transcription data: "
 
     valid_letter_entered = False
     while valid_letter_entered == False:
         try:
             letter_of_column_with_data = input(header_input_message)
+    #    print(df_from_csv[letter_of_column_with_data].values[0])
+            for content_of_cell in df_from_csv[letter_of_column_with_data].values:
+
+                for char_index, char in enumerate(content_of_cell):
+
+                    if char == " ":
+                        continue
+
+                    char_is_at_start_of_word = (char_index == 0 or content_of_cell[char_index-1] == " ")
+                    if char_is_at_start_of_word:
+                        character_before_character = "#"
+                    else:
+                        character_before_character = content_of_cell[char_index-1]
+
+                    word_is_one_character = (len(content_of_cell) == 1)
+                    char_is_at_end_of_word = (char_index == len(content_of_cell)-1 or content_of_cell[char_index+1] == " ")
+
+                    if word_is_one_character or char_is_at_end_of_word:
+                        character_after_character = "#"
+                    else:
+                        character_after_character = content_of_cell[char_index+1]
+                    
+                    environment_of_char = character_before_character + "_" + character_after_character
+
+                    if char in environments:
+                        if environment_of_char not in environments[char]:    
+                            environments[char].append(environment_of_char)
+                        else:
+                            continue
+                    elif char not in environments:
+                        environments[char] = []
+                        environments[char].append(environment_of_char)
+
             valid_letter_entered = True
+
+        except KeyboardInterrupt: 
+            print("\n\nKeyboard interrupt detected. Exiting.")
+            break
+
         except:
-            print("The input was not valid. Please try again.")
+            print("The input was not valid. Please try again.\n")
             continue
-
-#    print(df_from_csv[letter_of_column_with_data].values[0])
-
-    for content_of_cell in df_from_csv[letter_of_column_with_data].values:
-
-        for char_index, char in enumerate(content_of_cell):
-   
-            char_is_at_start_of_word = (char_index == 0 or content_of_cell[char_index-1] == " ")
-            if char_is_at_start_of_word:
-                character_before_character = "#"
-            else:
-                character_before_character = content_of_cell[char_index-1]
-
-            word_is_one_character = (len(content_of_cell) == 1)
-            char_is_at_end_of_word = (char_index == len(content_of_cell)-1 or content_of_cell[char_index+1] == " ")
-
-            if word_is_one_character or char_is_at_end_of_word:
-                character_after_character = "#"
-            else:
-                character_after_character = content_of_cell[char_index+1]
-            
-            environment_of_char = character_before_character + "_" + character_after_character
-
-#            print(environment_of_char)
-
-            if char in environments:
-                if environment_of_char not in environments[char]:    
-                    environments[char].append(environment_of_char)
-                else:
-                    continue
-            elif char not in environments:
-                environments[char] = []
-                environments[char].append(environment_of_char)
 
     return environments
 
@@ -90,7 +95,6 @@ def check_if_csv_has_header(csv_filename):
             try:
                 sample = csv_contents[0]
                 has_header = csv.Sniffer().has_header(sample)
-                print(has_header)
                 if has_header == False:
                     return False
                 else:
