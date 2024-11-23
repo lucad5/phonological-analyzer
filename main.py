@@ -14,6 +14,66 @@ def check_if_csv_filename_is_valid(filename):
     elif filename.endswith('.csv') == False:
         return False
 
+def create_environments_spreadsheet(dictionary_of_environments, output_filename):
+    print("Placeholder")
+
+    environments_file_created = False
+    while environments_file_created != True:
+        print("Placeholder")
+
+    # TODO:
+    # # this is for being able to align and sort the environments in the spreadsheet
+    # list_of_unique_environments = []
+    # for character in characters_and_environments:
+    #     for environment in characters_and_environments[character]:
+    #         if environment in list_of_unique_environments:
+    #             list_of_unique_environments.append(environment)
+    #         else:
+    #             continue
+            
+
+    # sort elements in list_of_unique_environments alphabetically
+    # number_of_unique_environments = list_of_unique_environments.length()
+
+    # open environments_file
+
+    # # align the environments in the spreadsheet using this sort of format
+    # # (where each unique environment is in its own cell, and the cells are sorted horizontally based on the first character in the environment):
+    # # k a_o
+    # # c a_o #_o
+    # # m         
+
+
+    # # Add all unique environments to the first row to enable alignment
+    # # Iterate over columns until there are no more unique environments
+    # for environment_index in range(0, number_of_unique_environments):
+        
+    #     # add environment to a cell in a column in in the first row (don't know if this is how you iterate over columns)
+    #     csv_file[environment_index] = list_of_unique_environments[environment_index]
+
+
+
+    # add each character and its phonological environments to the spreadsheet
+    # for current_row in environments_file:
+    #     # 
+    #     if current_row is the first row:
+    #         continue
+
+    #     # iterate over each cell in the row
+    #     for cell in environments_file:
+    #         for character, environments_of_character in environments_dictionary:
+                
+    #             add character to cell in first column
+    #             # add environments of that character in subsequent columns
+    #             for environment in environments_of_character:
+    #                 compare environment to unique_environments in first row, to find which column the environment should be in
+    #                 environment_column = column_of_environment_in_first_row
+    #                 add environment to current_row[environment_column]
+
+
+    # in the spreadsheet, remove placeholder unique environments from the first row
+    # in the spreadsheet, add the string "Phonetic segment" to the cell in the first row in the first column 
+
 def determine_environments_of_segments(df_from_csv):
 
     # TODO: Function WIP
@@ -82,8 +142,6 @@ def determine_environments_of_segments(df_from_csv):
 
     return environments
 
-
-
 def check_if_csv_has_header(csv_filename):
 
     try:
@@ -116,8 +174,8 @@ def main():
     directory_of_main_py = os.path.dirname(os.path.abspath(__file__))
     os.chdir(directory_of_main_py)
 
-    file_opened = False
-    while file_opened == False:
+    input_file_opened = False
+    while input_file_opened == False:
 
         filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
         
@@ -131,74 +189,31 @@ def main():
 
         df_environments = pd.read_csv(filename)
 
-        file_opened = True
+        input_file_opened = True
 
-        dictionary_of_environments = determine_environments_of_segments(df_environments)
+    dictionary_of_environments = determine_environments_of_segments(df_environments)
 
+    output_file_created = False
+    while output_file_created == False:
 
-    # # TODO:
-
-    # environments_file_created = False
-    # while environments_file_created != True:
-    #     input("Please enter the filename you wish to use for the .csv file where the phonological environments will be saved to (example: environments.csv): ")
-    #     if filename does not exist in current folder
-    #         create new file (environments.csv)
-    #         environments_file_created = True
-    #     elif filename exists:
-    #         print("Error: A file with that filename already exists in the current directory.")
-    #         continue
-
-    # # this is for being able to align and sort the environments in the spreadsheet
-    # list_of_unique_environments = []
-    # for character in characters_and_environments:
-    #     for environment in characters_and_environments[character]:
-    #         if environment in list_of_unique_environments:
-    #             list_of_unique_environments.append(environment)
-    #         else:
-    #             continue
+            output_filename = input("\nPlease enter the filename you wish to use for the .csv file that will contain the aligned environments (note: the filename must end in \".csv\" (no quotes)): ")
             
+            if check_if_csv_filename_is_valid(output_filename) == False:
+                print("Error: The file provided is does not end in '.csv.' Please try again.")
+                continue            
 
-    # sort elements in list_of_unique_environments alphabetically
-    # number_of_unique_environments = list_of_unique_environments.length()
+            if os.path.isfile(directory_of_main_py + "\\" + output_filename):
+                print("Error: The file already exists. Please choose another filename.")
+                continue
 
-    # open environments_file
+            create_environments_spreadsheet(dictionary_of_environments, output_filename)
 
-    # # align the environments in the spreadsheet using this sort of format
-    # # (where each unique environment is in its own cell, and the cells are sorted horizontally based on the first character in the environment):
-    # # k a_o
-    # # c a_o #_o
-    # # m         
+            output_file_created = True
 
-
-    # # Add all unique environments to the first row to enable alignment
-    # # Iterate over columns until there are no more unique environments
-    # for environment_index in range(0, number_of_unique_environments):
-        
-    #     # add environment to a cell in a column in in the first row (don't know if this is how you iterate over columns)
-    #     csv_file[environment_index] = list_of_unique_environments[environment_index]
+    print("The phonological environments from %s have been written to the file %s. Program execution complete.")
 
 
 
-    # add each character and its phonological environments to the spreadsheet
-    # for current_row in environments_file:
-    #     # 
-    #     if current_row is the first row:
-    #         continue
-
-    #     # iterate over each cell in the row
-    #     for cell in environments_file:
-    #         for character, environments_of_character in environments_dictionary:
-                
-    #             add character to cell in first column
-    #             # add environments of that character in subsequent columns
-    #             for environment in environments_of_character:
-    #                 compare environment to unique_environments in first row, to find which column the environment should be in
-    #                 environment_column = column_of_environment_in_first_row
-    #                 add environment to current_row[environment_column]
-
-
-    # in the spreadsheet, remove placeholder unique environments from the first row
-    # in the spreadsheet, add the string "Phonetic segment" to the cell in the first row in the first column 
 
 if __name__ == "__main__":
     main()
