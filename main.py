@@ -33,7 +33,14 @@ def determine_environments_of_segments(df_from_csv):
 
     header_input_message += "Please type in the letter(s) (shown in parentheses) of the column containing the data in IPA transcription: "
 
-    letter_of_column_with_data = input(header_input_message)
+    valid_letter_entered = False
+    while valid_letter_entered == False:
+        try:
+            letter_of_column_with_data = input(header_input_message)
+            valid_letter_entered = True
+        except:
+            print("The input was not valid. Please try again.")
+            continue
 
 #    print(df_from_csv[letter_of_column_with_data].values[0])
 
@@ -57,14 +64,16 @@ def determine_environments_of_segments(df_from_csv):
             
             environment_of_char = character_before_character + "_" + character_after_character
 
-            # TODO: add code to check if enviornment is already in the environments dictionary, and if not, add environment_of_char to it
 #            print(environment_of_char)
 
-    #       if character in environments_of_characters:
-    #           if environment not in environments_of_characters[character]:    
-    #               characters_and_environments[character].append(environment)
-    #           else:
-    #               continue
+            if char in environments:
+                if environment_of_char not in environments[char]:    
+                    environments[char].append(environment_of_char)
+                else:
+                    continue
+            elif char not in environments:
+                environments[char] = []
+                environments[char].append(environment_of_char)
 
     return environments
 
