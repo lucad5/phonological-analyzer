@@ -15,11 +15,47 @@ def check_if_csv_filename_is_valid(filename):
         return False
 
 def create_environments_spreadsheet(dictionary_of_environments, output_filename):
-    print("Placeholder")
 
+    segments_and_environments_sorted_by_row = {}
+
+    number_of_rows = 0
+
+    # Determine the number of rows for environments (i.e., number of environments - 1 (the header row))
+    for header_index, (header, environments) in enumerate(dictionary_of_environments.items()): 
+        print(environments)
+        if len(environments) > number_of_rows:
+            number_of_rows = len(environments)
+
+    # Add the header row
+    number_of_rows += 1
+
+    #Rearrange the segments-and-environments dictionary into a dictionary with a separate key for each row, so csv.writerow() can be used
+    for row_number in range(number_of_rows):
+
+        segments_and_environments_sorted_by_row[row_number] = []
+
+        # Add headers 
+        if row_number == 0:
+            for header_index, (header, environments) in enumerate(dictionary_of_environments.items()):
+                segments_and_environments_sorted_by_row[row_number].append(header)
+
+        #Add environments
+        else:
+            for header_index, (header, environments) in enumerate(dictionary_of_environments.items()):
+                segments_and_environments_sorted_by_row[row_number].append(environments[row_number-1])
+    
     environments_file_created = False
     while environments_file_created != True:
-        print("Placeholder")
+        try:
+            with open(output_filename, mode='w', newline='') as output_file:
+                writer = csv.writer(output_file)
+                for row_number in segments_and_environments_sorted_by_row:
+                    writer.writerow(segments_and_environments_sorted_by_row[row_number])
+
+            environments_file_created = True
+        except:
+            print("An error occurred. Exiting.")
+            break
 
     # TODO:
     # # this is for being able to align and sort the environments in the spreadsheet
@@ -210,7 +246,7 @@ def main():
 
             output_file_created = True
 
-    print("The phonological environments from %s have been written to the file %s. Program execution complete.")
+    print("The phonological environments from %s have been written to the file %s. Program execution complete." % (filename, output_filename))
 
 
 
