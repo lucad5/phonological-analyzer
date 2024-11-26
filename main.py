@@ -1,7 +1,6 @@
 # The following contains both code (in progress), as well as pseudocode that will be rewritten using real code
 
 import os
-import magic
 import pandas as pd
 import csv
 from pathlib import Path
@@ -16,19 +15,18 @@ def check_if_csv_filename_is_valid(filename):
 
 def create_environments_spreadsheet(dictionary_of_environments, output_filename):
 
-    segments_and_environments_sorted_by_row = {}
-
     number_of_rows = 0
 
     # Determine the number of rows for environments (i.e., number of environments - 1 (the header row))
     for header_index, (header, environments) in enumerate(dictionary_of_environments.items()): 
-        print(environments)
+#        print(environments)
         if len(environments) > number_of_rows:
             number_of_rows = len(environments)
 
     # Add the header row
     number_of_rows += 1
 
+    segments_and_environments_sorted_by_row = {}
     #Rearrange the segments-and-environments dictionary into a dictionary with a separate key for each row, so csv.writerow() can be used
     for row_number in range(number_of_rows):
 
@@ -112,7 +110,6 @@ def create_environments_spreadsheet(dictionary_of_environments, output_filename)
 
 def determine_environments_of_segments(df_from_csv):
 
-    # TODO: Function WIP
     ''' This will generate a dictionary with this structure (this example is based on an input consisting of the string "aa"):
     ["a": [{"pre-segment segment": "#", "post-segment segment": "#"}, {"pre-segment segment": "a", "post-segment segment": "#"}]}'''
 
@@ -120,21 +117,25 @@ def determine_environments_of_segments(df_from_csv):
 
     csv_headers = list(df_from_csv)
 
-    header_input_message = "\nThe file has the following columns (the column name/header is in parentheses):\n"
+    header_input_message = "\nThe file has the following columns (the column name/header is after the parentheses):\n"
 
-    for header_number, header_index in enumerate(csv_headers):
-        column_header = "(%s)" % header_index
+    headers_and_their_numbers = {}
 
-        header_input_message += "%s %s\n" % (column_header, header_number)
+    for header_number, header_name in enumerate(csv_headers):
+        headers_and_their_numbers[header_number] = header_name
+#        column_header = "(%s)" % header_name
 
-    header_input_message += "\nPlease type in the name/header of the column that contains the IPA transcription data: "
+        header_input_message += "(%d) %s\n" % (header_number, header_name)
 
-    valid_letter_entered = False
-    while valid_letter_entered == False:
+    header_input_message += "\nPlease type in the number (shown in parentheses) of the column that contains the IPA transcription data: "
+
+    valid_number_entered = False
+    while valid_number_entered == False:
         try:
-            letter_of_column_with_data = input(header_input_message)
-    #    print(df_from_csv[letter_of_column_with_data].values[0])
-            for content_of_cell in df_from_csv[letter_of_column_with_data].values:
+            number_of_column_with_data = int(input(header_input_message))
+            name_of_column_with_data = headers_and_their_numbers[number_of_column_with_data]
+    #    print(df_from_csv[number_of_column_with_data].values[0])
+            for content_of_cell in df_from_csv[name_of_column_with_data].values:
 
                 for char_index, char in enumerate(content_of_cell):
 
@@ -166,11 +167,11 @@ def determine_environments_of_segments(df_from_csv):
                         environments[char] = []
                         environments[char].append(environment_of_char)
 
-            valid_letter_entered = True
+            valid_number_entered = True
 
         except KeyboardInterrupt: 
             print("\n\nKeyboard interrupt detected. Exiting.")
-            break
+            quit()
 
         except:
             print("The input was not valid. Please try again.\n")
@@ -181,7 +182,7 @@ def determine_environments_of_segments(df_from_csv):
 def check_if_csv_has_header(csv_filename):
 
     try:
-        with open(csv_filename, 'r') as f:
+        with open(csv_filename, 'r', encoding="utf-8") as f:
 
             csv_contents = f.readlines()
 
@@ -235,7 +236,7 @@ def main():
             output_filename = input("\nPlease enter the filename you wish to use for the .csv file that will contain the aligned environments (note: the filename must end in \".csv\" (no quotes)): ")
             
             if check_if_csv_filename_is_valid(output_filename) == False:
-                print("Error: The file provided is does not end in '.csv.' Please try again.")
+                print("Error: The file provided does not end in '.csv.' Please try again.")
                 continue            
 
             if os.path.isfile(directory_of_main_py + "\\" + output_filename):
@@ -246,10 +247,7 @@ def main():
 
             output_file_created = True
 
-    print("The phonological environments from %s have been written to the file %s. Program execution complete." % (filename, output_filename))
-
-
-
+    print("Success! The phonological environments from %s have been written to the file %s. Exiting program." % (filename, output_filename))
 
 if __name__ == "__main__":
     main()
