@@ -1,1 +1,0 @@
-                writer.writerow(data[i])
