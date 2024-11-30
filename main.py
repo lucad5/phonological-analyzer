@@ -55,37 +55,41 @@ def create_environments_spreadsheet(dictionary_of_environments, output_filename)
             print("An error occurred. Exiting.")
             break
 
-    # TODO:
-    # # this is for being able to align and sort the environments in the spreadsheet
-    # list_of_unique_environments = []
-    # for character in characters_and_environments:
-    #     for environment in characters_and_environments[character]:
-    #         if environment in list_of_unique_environments:
-    #             list_of_unique_environments.append(environment)
-    #         else:
-    #             continue
-            
+    # TODO: align and sort the environments in the spreadsheet; the code below will need to be integrated into the code above once the code below is complete
+    # This is to create a list of unique environments that will be used to align the environments in the spreadsheet
+    list_of_unique_environments = []
+    for character in dictionary_of_environments:
+         for environment in dictionary_of_environments[character]:
+             if environment not in list_of_unique_environments:
+                 list_of_unique_environments.append(environment)
+             else:
+                 continue
 
     # sort elements in list_of_unique_environments alphabetically
-    # number_of_unique_environments = list_of_unique_environments.length()
+
+    number_of_unique_environments = len(list_of_unique_environments)
 
     # open environments_file
+
+    # TODO: replace 'testfile.csv' with output_filename once the alignment code is complete
+    try:
+        with open('testfile.csv', mode='w', newline='') as f:
+            writer = csv.writer(f)
+            print("List: ", list_of_unique_environments)
+            first_row = ["Segments:"] + list_of_unique_environments
+            writer.writerow(first_row)
+            # TODO: add code to add environments to rows after the first row
+#            for row_number in segments_and_environments_sorted_by_row:
+#                writer.writerow(segments_and_environments_sorted_by_row[row_number])
+    except:
+        print("An error occurred. Exiting.")
+#        break
 
     # # align the environments in the spreadsheet using this sort of format
     # # (where each unique environment is in its own cell, and the cells are sorted horizontally based on the first character in the environment):
     # # k a_o
     # # c a_o #_o
-    # # m         
-
-
-    # # Add all unique environments to the first row to enable alignment
-    # # Iterate over columns until there are no more unique environments
-    # for environment_index in range(0, number_of_unique_environments):
-        
-    #     # add environment to a cell in a column in in the first row (don't know if this is how you iterate over columns)
-    #     csv_file[environment_index] = list_of_unique_environments[environment_index]
-
-
+    # # m
 
     # add each character and its phonological environments to the spreadsheet
     # for current_row in environments_file:
@@ -111,7 +115,7 @@ def create_environments_spreadsheet(dictionary_of_environments, output_filename)
 def determine_environments_of_segments(df_from_csv):
 
     ''' This will generate a dictionary with this structure (this example is based on an input consisting of the string "aa"):
-    ["a": [{"pre-segment segment": "#", "post-segment segment": "#"}, {"pre-segment segment": "a", "post-segment segment": "#"}]}'''
+    ["a": ["#_a", "a_#"]}'''
 
     environments = {}
 
