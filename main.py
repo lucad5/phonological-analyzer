@@ -206,9 +206,9 @@ def main():
         if csv_has_header == False:
             continue
 
-        df_environments = pd.read_csv(filename)
-
         input_file_opened = True
+
+    df_environments = pd.read_csv(filename)
 
     dictionary_of_environments = determine_environments_of_segments(df_environments)
 
