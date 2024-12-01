@@ -1,5 +1,3 @@
-# The following contains both code (in progress), as well as pseudocode that will be rewritten using real code
-
 import os
 import pandas as pd
 import csv
@@ -15,48 +13,6 @@ def check_if_csv_filename_is_valid(filename):
 
 def create_environments_spreadsheet(dictionary_of_environments, output_filename):
 
-    # TODO: delete the following code, and replace it with the code that creates a spreadsheet where the environments are aligned
-    number_of_rows = 0
-
-    # Determine the number of rows for environments (i.e., number of environments - 1 (the header row))
-    for header_index, (header, environments) in enumerate(dictionary_of_environments.items()): 
-#        print(environments)
-        if len(environments) > number_of_rows:
-            number_of_rows = len(environments)
-
-    # Add the header row
-    number_of_rows += 1
-
-    segments_and_environments_sorted_by_row = {}
-    #Rearrange the segments-and-environments dictionary into a dictionary with a separate key for each row, so csv.writerow() can be used
-    for row_number in range(number_of_rows):
-
-        segments_and_environments_sorted_by_row[row_number] = []
-
-        # Add headers 
-        if row_number == 0:
-            for header_index, (header, environments) in enumerate(dictionary_of_environments.items()):
-                segments_and_environments_sorted_by_row[row_number].append(header)
-
-        #Add environments
-        else:
-            for header_index, (header, environments) in enumerate(dictionary_of_environments.items()):
-                segments_and_environments_sorted_by_row[row_number].append(environments[row_number-1])
-    
-    environments_file_created = False
-    while environments_file_created != True:
-        try:
-            with open(output_filename, mode='w', newline='') as output_file:
-                writer = csv.writer(output_file)
-                for row_number in segments_and_environments_sorted_by_row:
-                    writer.writerow(segments_and_environments_sorted_by_row[row_number])
-
-            environments_file_created = True
-        except:
-            print("An error occurred. Exiting.")
-            break
-
-    # TODO: align and sort the environments in the spreadsheet; the code below will need to be integrated into the code above once the code below is complete
     # This is to create a list of unique environments that will be used to align the environments in the spreadsheet
     list_of_unique_environments = []
     for character in dictionary_of_environments:
@@ -66,15 +22,11 @@ def create_environments_spreadsheet(dictionary_of_environments, output_filename)
              else:
                  continue
 
-    # sort elements in list_of_unique_environments alphabetically
-
     number_of_unique_environments = len(list_of_unique_environments)
 
-    # TODO: replace 'testfile.csv' with output_filename once the alignment code is complete
     try:
-        with open('testfile.csv', mode='w', newline='') as f:
+        with open(output_filename, mode='w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            print("List: ", list_of_unique_environments)
             first_row = ["Segments:"] + list_of_unique_environments
             writer.writerow(first_row)
             
@@ -105,7 +57,6 @@ def determine_environments_of_segments(df_from_csv):
 
     for header_number, header_name in enumerate(csv_headers):
         headers_and_their_numbers[header_number] = header_name
-#        column_header = "(%s)" % header_name
 
         header_input_message += "(%d) %s\n" % (header_number, header_name)
 
@@ -116,7 +67,7 @@ def determine_environments_of_segments(df_from_csv):
         try:
             number_of_column_with_data = int(input(header_input_message))
             name_of_column_with_data = headers_and_their_numbers[number_of_column_with_data]
-    #    print(df_from_csv[number_of_column_with_data].values[0])
+
             for content_of_cell in df_from_csv[name_of_column_with_data].values:
 
                 for char_index, char in enumerate(content_of_cell):
@@ -193,8 +144,8 @@ def main():
     directory_of_main_py = os.path.dirname(os.path.abspath(__file__))
     os.chdir(directory_of_main_py)
 
-    input_file_opened = False
-    while input_file_opened == False:
+    valid_file_provided = False
+    while valid_file_provided == False:
 
         filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
         
@@ -206,10 +157,9 @@ def main():
         if csv_has_header == False:
             continue
 
-        input_file_opened = True
+        valid_file_provided = True
 
-    df_environments = pd.read_csv(filename)
-
+    df_environments = pd.read_csv(filename, encoding='utf-8')
     dictionary_of_environments = determine_environments_of_segments(df_environments)
 
     output_file_created = False
