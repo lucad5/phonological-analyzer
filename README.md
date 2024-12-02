@@ -11,7 +11,7 @@ Given a .csv file, determines the phonological environment of each character in 
 
 # Functionality
 - Takes a .csv file as input, and outputs a separate .csv file that contains the environments for each segment in a column in the .csv file
-- Provides the environments in aligned format, to see at a glance which segments have shared environments
+- Provides the environments in aligned format to make it easier to see at a glance which segments have shared environments
 
 # Feature wishlist
 - Provide suggestions as to which segments may be in complementary distribution, contrastive distribution, or free variation
