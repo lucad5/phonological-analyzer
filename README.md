@@ -3,8 +3,10 @@ Given a .csv file, determines the phonological environment of each character in 
 
 # Instructions
 - Run `python main.py`
-- Type the name of the .csv file in the current directory you wish to analyze (if you do not have one, you can type `example.csv`), and press Enter
-- Type the number of the column that contains the IPA data (if you used the example.csv file, type `1`), and press Enter
+- Type the name of the .csv file in the current directory you wish to analyze, and press Enter
+  - If you do not have a file, you can type `example.csv`
+- Type the number of the column that contains the IPA data, and press Enter
+  -  If you used the example.csv file, type `1`
 - Type the desired name for the output .csv file that will contain the aligned environments for each segment, and press Enter
 
 # Functionality
