@@ -11,6 +11,9 @@ Given a .csv file, determines the phonological environment of each character in 
 - Takes a .csv file as input, and outputs a separate .csv file that contains the environments for each segment in a column in the .csv file
 - Provides the environments in aligned format, to see at a glance which segments have shared environments
 
-# Future functionality
-- Automatically provide suggestions as to which segments may be in complementary distribution, contrastive distribution, or free variation
+# Feature wishlist
+- Provide suggestions as to which segments may be in complementary distribution, contrastive distribution, or free variation
+- Provide a condensed summary of the different types of environments (e.g. interconsonantal, intervocalic, word-initial, word-final) segments occur in.
+  - For example, given a dataset where `e` occurs in the environments `#_d` and `f_#` the environments for `e` could be summarized as:
+  - `word-initial: #_d` <br /> `word-final: f_#`
 - Sort the segments and environments in the output .csv file in alphabetical order
