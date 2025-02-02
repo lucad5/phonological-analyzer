@@ -150,7 +150,7 @@ def main():
         filename = input("Please enter the name of the .csv file with the phonetic data you wish to analyze: ")
         
         if check_if_csv_filename_is_valid(filename) == False:
-            print("Error: The file provided is does not end in '.csv.' Please try again.\n")
+            print("Error: The file provided does not have a filename ending in '.csv.' Please try again.\n")
             continue
         
         csv_has_header = check_if_csv_has_header(filename)
@@ -168,7 +168,7 @@ def main():
             output_filename = input("\nPlease enter the filename you wish to use for the .csv file that will contain the aligned environments (note: the filename must end in \".csv\" (no quotes)): ")
             
             if check_if_csv_filename_is_valid(output_filename) == False:
-                print("Error: The file provided does not end in '.csv.' Please try again.")
+                print("Error: The file provided does not have a filename ending in '.csv.' Please try again.")
                 continue            
 
             if os.path.isfile(directory_of_main_py + "\\" + output_filename):
